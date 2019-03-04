@@ -62,8 +62,13 @@ The very important step is to set the network interface name for the NCCL socket
 ```
 $ export NCCL_SOCKET_IFNAME=ens3
 ```
-....
 <a name="code"/>
 ## Distributed Coding
+Some of important imports for distributed training are:
+```
+import torch.nn.parallel
+import torch.distributed as dist
+import torch.utils.data.distributed
+from torch.multiprocessing import Pool, Process
 ....
 
