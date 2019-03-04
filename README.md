@@ -33,9 +33,35 @@ Here, we are going to launch *two* *multi-GPU* instances in AWS. If you do not h
 .
 <a name="security"/>
 ## Configuring Security Group
-....
+After launching the instances, from the EC2 dashboard, select *Network & Security > Security Group*. Select the security group name you chose in step 7 above, right click on it, and choose *Edit  inbound rules*. Remove all rules and add a new one with the type of *All traffic*. Right click on the  same security group name and repeat the above orocedure for the outbound rules. This way, you allow all inbound and outbound traffic between all nodes.
+.
+.
 <a name="env"/>
 ## Seting up Environments
+In EC2 dashboard and *Instances > Instances* tap, select each instance and remember its public and private IPv4. Public IPs are the addresses we use for SSH while the private ones will be used for inter-node communications.
+We refer to IP addresses of each node as *node0_publicIP, node0_privateIP, node1_publicIP, node1_privateIP*.
+
+We need to setup each node separately. Connect to each node using:
+```
+$ ssh -i "<PRIVATE KEY *.pem>" ec2-user@<INSTACE PUBLIC DNS>
+```
+If your instance does not have PyTorch, you may use conda to create a virtual environment and install PyTorch as below:
+```
+$ conda create -n pytorch_env python=3.6 numpy
+$ source activate pytorch_env
+$ pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cu90/torch_nightly.html
+```
+We also need to install torchvision to use its models and  datasets:
+```
+$ cd
+$ git clone https://github.com/pytorch/vision.git
+$ cd vision
+$ python setup.py install
+```
+The very important step is to set the network interface name for the NCCL socket. To get the network interface name use `ifconfig` command and look for a name corresponds to the node's *privateIP* (e.g. ens3). Then  set the environment variable as:
+```
+$ export NCCL_SOCKET_IFNAME=ens3
+```
 ....
 <a name="code"/>
 ## Distributed Coding
