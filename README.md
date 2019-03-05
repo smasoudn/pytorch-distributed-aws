@@ -65,6 +65,7 @@ $ export NCCL_SOCKET_IFNAME=ens3
 .
 <a name="code"/>
 ## Distributed Coding
+xxxx
 Some of important imports for distributed training are:
 ```
 import torch.nn.parallel
@@ -72,4 +73,14 @@ import torch.distributed as dist
 import torch.utils.data.distributed
 from torch.multiprocessing import Pool, Process
 ....
-
+### Input
+Input parameters for our distributed training include:
+- *batch_size* - batch size for _each process_ in the distributed training group. Total batch size across distributed model is batch_size*world_size
+- *workers* - number of worker processes used with the dataloaders in each process
+- *num_epochs* - total number of epochs to train for
+- *starting_lr* - starting learning rate for training
+- *world_size* - number of processes in the distributed training environment
+- *dist_backend* - backend to use for distributed training communication (i.e. NCCL, Gloo, MPI, etc.). In this tutorial, since we are using several multi-gpu nodes, NCCL is suggested.
+- *dist_url* - URL to specify the initialization method of the process group. This may contain the IP address and port of the rank0 process or be a non-existant file on a shared file system. Here, since we do not have a shared file system this will incorporate the _node0-privateIP_ and the port on node0 to use.
+ 
+To clarify on number of workers and world size, assume you have two nodes, each with 8 GPUs and you wish to train with all of them then `world_size=16` and each node will have a process with local rank `0-7` (number of GPUs). 
