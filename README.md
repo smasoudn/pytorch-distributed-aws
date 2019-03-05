@@ -72,6 +72,7 @@ import torch.nn.parallel
 import torch.distributed as dist
 import torch.utils.data.distributed
 from torch.multiprocessing import Pool, Process
+```
 ....
 ### Input
 Input parameters for our distributed training include:
